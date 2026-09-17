@@ -176,8 +176,9 @@ func applySessionAffinity(body []byte, headers http.Header, opts EmitOptions) ([
 			return nil, fmt.Errorf("set prompt_cache_key: %w", err)
 		}
 		return out, nil
-	case providers.ProviderBedrock:
-		// Explicit cachePoint caching, centrally routed — no replica roulette.
+	case providers.ProviderBedrock, providers.ProviderDeepSeek:
+		// Bedrock uses explicit cachePoint caching; DeepSeek context caching is
+		// automatic. Neither provider documents a session-affinity hint.
 		return body, nil
 	case providers.ProviderXAI:
 		// Chat Completions affinity header; Responses API uses prompt_cache_key
